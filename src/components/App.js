@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import { api } from '../utils/api';
 import Header from './Header';
@@ -12,12 +12,14 @@ import AddPlacePopup from './AddPlacePopup';
 import SubmitDeletePopup from './SubmitDeletePopup';
 import Register from './Register';
 import Login from './Login';
+import ProtectedRoute from './ProtectedRoute';
 import '../index.css';
 
 function App() {
   const [currentUser, setCurrentUser] = useState('');
   const [cards, setCards] = useState([]);
   const [deletedCard, setDeletedCard] = useState(null);
+  const [loggedIn, setLoggedIn] = useState(false);
 
   // Состояния попапов
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -165,7 +167,7 @@ function App() {
             <Login />
           </Route>
 
-          <Route path="/">
+          <ProtectedRoute loggedIn={loggedIn}>
             <Main
               onEditProfile={handleEditProfileClick}
               onAddPlace={handleAddPlaceClick}
@@ -204,7 +206,7 @@ function App() {
             />
 
             <ImagePopup card={selectedCard} onClose={closeAllPopups} />
-          </Route>
+          </ProtectedRoute>
         </Switch>
       </CurrentUserContext.Provider>
     </div>

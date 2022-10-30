@@ -1,35 +1,7 @@
-function AuthForm({ name, onSubmit, buttonText }) {
+function AuthForm({ name, onSubmit, buttonText, children }) {
   return (
-    <form
-      className={`auth-form auth-form_purpose_${name}`}
-      onSubmit={onSubmit}
-      name={name}
-      noValidate
-    >
-      <fieldset className="auth-form__fieldset">
-        <input
-          // onChange={}
-          // value={}
-          className="auth-form__input"
-          type="text"
-          // name=""
-          placeholder="Email"
-          // id="form__input_type_place"
-          required
-        />
-
-        <input
-          // onChange={}
-          // value={}
-          className="auth-form__input"
-          type="password"
-          // name=""
-          placeholder="Пароль"
-          // id="form__input_type_place"
-          required
-        />
-      </fieldset>
-
+    <form className="auth-form" onSubmit={onSubmit} name={name} noValidate>
+      {children}
       <button className="auth-form__button" type="submit" value={buttonText}>
         {buttonText}
       </button>
