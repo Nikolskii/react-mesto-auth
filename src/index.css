@@ -42,3 +42,7 @@
 @import url(./blocks/popup/_opened/popup_opened.css);
 @import url(./blocks/auth/auth.css);
 @import url(./blocks/auth/__title/auth__title.css);
+@import url(./blocks/auth-form/auth-form.css);
+@import url(./blocks/auth-form/__fieldset/auth-form__fieldset.css);
+@import url(./blocks/auth-form/__input/auth-form__input.css);
+@import url(./blocks/auth-form/__button/auth-form__button.css);
