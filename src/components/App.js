@@ -11,6 +11,7 @@ import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
 import SubmitDeletePopup from './SubmitDeletePopup';
 import Register from './Register';
+import Login from './Login';
 import '../index.css';
 
 function App() {
@@ -160,7 +161,9 @@ function App() {
             <Register />
           </Route>
 
-          <Route path="/sign-in">{/* <Login /> */}</Route>
+          <Route path="/sign-in">
+            <Login />
+          </Route>
 
           <Route path="/">
             <Main
