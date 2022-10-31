@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import AuthForm from './AuthForm';
 import * as auth from '../utils/auth';
 
@@ -7,9 +7,19 @@ function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const navigate = useNavigate();
+
   function handleSubmit(evt) {
     evt.preventDefault();
-    auth.register({ email, password });
+
+    auth.register({ email, password }).then((res) => {
+      if (res) {
+        console.log('пока все ок');
+        navigate('/sign-in');
+      } else {
+        console.log('Что-то пошло не так!');
+      }
+    });
   }
 
   return (
