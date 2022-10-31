@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import AuthForm from './AuthForm';
+import * as auth from '../utils/auth';
 
 function Register() {
   const [email, setEmail] = useState('');
@@ -8,6 +9,7 @@ function Register() {
 
   function handleSubmit(evt) {
     evt.preventDefault();
+    auth.register({ email, password });
   }
 
   return (
