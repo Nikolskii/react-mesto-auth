@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import { api } from '../utils/api';
 import Header from './Header';
@@ -13,6 +13,8 @@ import SubmitDeletePopup from './SubmitDeletePopup';
 import Register from './Register';
 import Login from './Login';
 import ProtectedRoute from './ProtectedRoute';
+import InfoTooltip from './InfoTooltip';
+import * as auth from '../utils/auth';
 import '../index.css';
 
 function App() {
@@ -20,12 +22,16 @@ function App() {
   const [cards, setCards] = useState([]);
   const [deletedCard, setDeletedCard] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [isRegistrationSuccess, setIsRegistrationSuccess] = useState(null);
+
+  const navigate = useNavigate();
 
   // Состояния попапов
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isSubmitDeletePopupOpen, setIsSubmitDeletePopupOpen] = useState(false);
+  const [isInfoTooltipPopupOpen, setIsInfoTooltipPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
 
   // Получение данных пользователя
@@ -154,12 +160,35 @@ function App() {
       });
   }
 
+  // Обработчий формы регистрации
+  function handleRegister({ email, password }) {
+    auth
+      .register({ email, password })
+      .then((res) => {
+        if (res) {
+          console.log('пока все ок');
+          setIsRegistrationSuccess(true);
+          // navigate('/sign-in');
+        } else {
+          console.log('Что-то пошло не так!');
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsRegistrationSuccess(false);
+      })
+      .finally(() => setIsInfoTooltipPopupOpen(true));
+  }
+
   return (
     <div className="page">
       <CurrentUserContext.Provider value={currentUser}>
         <Header />
         <Routes>
-          <Route path="/sign-up" element={<Register />} />
+          <Route
+            path="/sign-up"
+            element={<Register onRegister={handleRegister} />}
+          />
 
           <Route path="/sign-in" element={<Login />} />
 
@@ -208,6 +237,11 @@ function App() {
         />
 
         <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+
+        <InfoTooltip
+          isOpen={isInfoTooltipPopupOpen}
+          isRegistrationSuccess={isRegistrationSuccess}
+        />
       </CurrentUserContext.Provider>
     </div>
   );
