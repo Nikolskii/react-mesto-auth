@@ -31,7 +31,16 @@ export const authorize = ({ email, password }) => {
       password: password,
       email: email,
     }),
-  }).then((res) => {
-    return res.json();
-  });
+  })
+    .then((res) => {
+      return res.json();
+    })
+    .then((data) => {
+      if (data.token) {
+        localStorage.setItem('token', data.token);
+        return data;
+      } else {
+        return;
+      }
+    });
 };
