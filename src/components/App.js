@@ -86,7 +86,18 @@ function App() {
     setIsAddPlacePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
     setIsSubmitDeletePopupOpen(false);
+    setIsInfoTooltipPopupOpen(false);
     setSelectedCard({});
+  }
+
+  function closeInfoTooltipPopup() {
+    closeAllPopups();
+
+    {
+      isRegistrationSuccess && navigate('/sign-in');
+    }
+
+    setIsRegistrationSuccess(null);
   }
 
   // Обработчик submit формы редактирования профиля
@@ -168,7 +179,6 @@ function App() {
         if (res) {
           console.log('пока все ок');
           setIsRegistrationSuccess(true);
-          // navigate('/sign-in');
         } else {
           console.log('Что-то пошло не так!');
         }
@@ -241,6 +251,7 @@ function App() {
         <InfoTooltip
           isOpen={isInfoTooltipPopupOpen}
           isRegistrationSuccess={isRegistrationSuccess}
+          onClose={closeInfoTooltipPopup}
         />
       </CurrentUserContext.Provider>
     </div>
