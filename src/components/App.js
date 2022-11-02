@@ -190,6 +190,21 @@ function App() {
       .finally(() => setIsInfoTooltipPopupOpen(true));
   }
 
+  // Обработчик формы авторизации
+  function handleLogin({ email, password }) {
+    auth
+      .authorize({ email, password })
+      .then((res) => {
+        console.log(res);
+        // в случае успеха сохраняет email в стейте главного компонента
+        // устанавливает в стейте флажок который говорит о том что пользователь залогинился,
+        // сохраняет в localStorage jwt токен который прилетает с сервера и отправляет пользователя на корневую страницу сайта
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   return (
     <div className="page">
       <CurrentUserContext.Provider value={currentUser}>
@@ -200,7 +215,7 @@ function App() {
             element={<Register onRegister={handleRegister} />}
           />
 
-          <Route path="/sign-in" element={<Login />} />
+          <Route path="/sign-in" element={<Login onLogin={handleLogin} />} />
 
           <Route
             path="/"
