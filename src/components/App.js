@@ -23,6 +23,7 @@ function App() {
   const [deletedCard, setDeletedCard] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
   const [isRegistrationSuccess, setIsRegistrationSuccess] = useState(null);
+  const [email, setEmail] = useState('');
 
   const navigate = useNavigate();
 
@@ -194,13 +195,26 @@ function App() {
   function handleLogin({ email, password }) {
     auth
       .authorize({ email, password })
-      .then((data) => console.log(data))
+      .then((data) => {
+        setEmail(email);
+        setLoggedIn(true);
+        navigate('/');
+      })
       .catch((err) => {
         console.log(err);
       });
-    // в случае успеха сохраняет email в стейте главного компонента
-    // устанавливает в стейте флажок который говорит о том что пользователь залогинился,
-    // сохраняет в localStorage jwt токен который прилетает с сервера и отправляет пользователя на корневую страницу сайта
+  }
+
+  useEffect(() => {
+    tokenCheck();
+  }, []);
+
+  function tokenCheck() {
+    if (localStorage.getItem('token')) {
+      const token = localStorage.getItem('token');
+
+      auth.getContent(token).then((res) => console.log(res));
+    }
   }
 
   return (
