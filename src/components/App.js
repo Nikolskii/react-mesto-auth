@@ -95,8 +95,8 @@ function App() {
   function closeInfoTooltipPopup() {
     closeAllPopups();
 
-    {
-      isRegistrationSuccess && navigate('sign-in');
+    if (isRegistrationSuccess) {
+      navigate('sign-in');
     }
 
     setIsRegistrationSuccess(null);
@@ -204,17 +204,12 @@ function App() {
       });
   }
 
-  useEffect(() => {
-    tokenCheck();
-  }, []);
-
   // Првоерка токена
   function tokenCheck() {
     if (localStorage.getItem('token')) {
       const token = localStorage.getItem('token');
 
       auth.checkToken(token).then((data) => {
-        console.log(data);
         setEmail(data.data.email);
       });
 
@@ -223,6 +218,10 @@ function App() {
       navigate('/');
     }
   }
+
+  useEffect(() => {
+    tokenCheck();
+  }, []);
 
   // Обработчик выхода
   function handleSignout() {
@@ -261,7 +260,7 @@ function App() {
                 <Footer />
               </ProtectedRoute>
             }
-          ></Route>
+          />
 
           <Route path="*" element={<ProtectedRoute loggedIn={loggedIn} />} />
         </Routes>
