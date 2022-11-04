@@ -17,6 +17,7 @@ function InfoTooltip({ isOpen, onClose, isRegistrationSuccess, loading }) {
             <img
               className="popup__reg-image"
               src={isRegistrationSuccess ? regSuccessImg : regUnsuccessImg}
+              alt="Регистрация"
             />
 
             <h2 className="popup__title popup__title_place_reg">
