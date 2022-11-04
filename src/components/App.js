@@ -22,9 +22,10 @@ function App() {
   const [cards, setCards] = useState([]);
   const [deletedCard, setDeletedCard] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [isRegistrationSuccess, setIsRegistrationSuccess] = useState(null);
+  const [isResponseSuccess, setIsResponseSuccess] = useState(null);
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(true);
+  const [infoTooltipText, setInfoTooltipText] = useState('');
 
   const navigate = useNavigate();
 
@@ -36,28 +37,37 @@ function App() {
   const [isInfoTooltipPopupOpen, setIsInfoTooltipPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
 
-  // Получение данных пользователя
+  // // Получение данных пользователя
+  // useEffect(() => {
+  //   api
+  //     .getUserInfo()
+  //     .then((userData) => {
+  //       setCurrentUser(userData);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // }, []);
+
+  // // Получение данных карточек
+  // useEffect(() => {
+  //   api
+  //     .getInitialCards()
+  //     .then((cards) => {
+  //       setCards(cards);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // }, []);
+
+  // Проверка токена
   useEffect(() => {
-    api
-      .getUserInfo()
-      .then((userData) => {
-        setCurrentUser(userData);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    tokenCheck();
   }, []);
 
-  // Получение данных карточек
   useEffect(() => {
-    api
-      .getInitialCards()
-      .then((cards) => {
-        setCards(cards);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    setIsResponseSuccess(null);
   }, []);
 
   // Обработчики состояния попапов
@@ -96,14 +106,10 @@ function App() {
   function closeInfoTooltipPopup() {
     closeAllPopups();
 
-    if (isRegistrationSuccess) {
+    if (isResponseSuccess) {
       navigate('sign-in');
     }
   }
-
-  useEffect(() => {
-    setIsRegistrationSuccess(null);
-  }, []);
 
   // Обработчик submit формы редактирования профиля
   function handleUpdateUser(userData) {
@@ -185,20 +191,23 @@ function App() {
     auth
       .register({ email, password })
       .then((res) => {
-        setIsRegistrationSuccess(true);
+        setIsResponseSuccess(true);
+        setInfoTooltipText('Вы успешно зарегистрировались!');
       })
       .catch((err) => {
         console.log(err);
-        setIsRegistrationSuccess(false);
+        setIsResponseSuccess(false);
+        setInfoTooltipText('Что-то пошло не так! Попробуйте ещё раз.');
       })
       .finally(() => {
-        // setIsInfoTooltipPopupOpen(true);
         setLoading(false);
       });
   }
 
-  // Обработчик формы авторизации
+  // Обработчик формы аутентификации
   function handleLogin({ email, password }) {
+    setLoading(true);
+
     auth
       .login({ email, password })
       .then((data) => {
@@ -211,27 +220,47 @@ function App() {
       })
       .catch((err) => {
         console.log(err);
+        setIsInfoTooltipPopupOpen(true);
+        setIsResponseSuccess(false);
+        setInfoTooltipText('Что-то пошло не так! Попробуйте ещё раз.');
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }
 
   // Проверка токена
   function tokenCheck() {
-    if (localStorage.getItem('token')) {
-      const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token');
 
+    if (token) {
       auth.checkToken(token).then((data) => {
         setEmail(data.data.email);
+
+        setLoggedIn(true);
+
+        navigate('/');
+
+        api
+          .getUserInfo()
+          .then((userData) => {
+            setCurrentUser(userData);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+
+        api
+          .getInitialCards()
+          .then((cards) => {
+            setCards(cards);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       });
-
-      setLoggedIn(true);
-
-      navigate('/');
     }
   }
-
-  useEffect(() => {
-    tokenCheck();
-  }, []);
 
   // Обработчик выхода
   function handleSignout() {
@@ -304,9 +333,10 @@ function App() {
 
         <InfoTooltip
           isOpen={isInfoTooltipPopupOpen}
-          isRegistrationSuccess={isRegistrationSuccess}
+          isResponseSuccess={isResponseSuccess}
           onClose={closeInfoTooltipPopup}
           loading={loading}
+          text={infoTooltipText}
         />
       </CurrentUserContext.Provider>
     </div>

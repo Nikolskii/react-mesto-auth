@@ -15,12 +15,7 @@ function Register({ onRegister }) {
     <section className="auth">
       <h1 className="auth__title">Регистрация</h1>
 
-      <form
-        className="auth-form"
-        onSubmit={handleSubmit}
-        name="register"
-        noValidate
-      >
+      <form className="auth-form" onSubmit={handleSubmit} name="register">
         <fieldset className="auth-form__fieldset">
           <input
             onChange={(evt) => {
@@ -32,6 +27,8 @@ function Register({ onRegister }) {
             name="email"
             id="email"
             placeholder="Email"
+            minLength="5"
+            maxLength="30"
             required
           />
 
@@ -45,6 +42,8 @@ function Register({ onRegister }) {
             name="password"
             id="password"
             placeholder="Пароль"
+            minLength="4"
+            maxLength="30"
             required
           />
         </fieldset>

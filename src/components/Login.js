@@ -14,12 +14,7 @@ function Login({ onLogin }) {
     <section className="auth">
       <h1 className="auth__title">Вход</h1>
 
-      <form
-        className="auth-form"
-        onSubmit={handleSubmit}
-        name="login"
-        noValidate
-      >
+      <form className="auth-form" onSubmit={handleSubmit} name="login">
         <fieldset className="auth-form__fieldset">
           <input
             onChange={(evt) => {
@@ -31,6 +26,8 @@ function Login({ onLogin }) {
             name="email"
             id="email"
             placeholder="Email"
+            minLength="5"
+            maxLength="30"
             required
           />
 
@@ -44,6 +41,8 @@ function Login({ onLogin }) {
             name="password"
             id="password"
             placeholder="Пароль"
+            minLength="4"
+            maxLength="30"
             required
           />
         </fieldset>
