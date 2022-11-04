@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import AuthForm from './AuthForm';
 
 function Login({ onLogin }) {
   const [email, setEmail] = useState('');
@@ -15,7 +14,12 @@ function Login({ onLogin }) {
     <section className="auth">
       <h1 className="auth__title">Вход</h1>
 
-      <AuthForm buttonText="Войти" onSubmit={handleSubmit} name="login">
+      <form
+        className="auth-form"
+        onSubmit={handleSubmit}
+        name="login"
+        noValidate
+      >
         <fieldset className="auth-form__fieldset">
           <input
             onChange={(evt) => {
@@ -43,7 +47,11 @@ function Login({ onLogin }) {
             required
           />
         </fieldset>
-      </AuthForm>
+
+        <button className="auth-form__button" type="submit" value="Войти">
+          Войти
+        </button>
+      </form>
     </section>
   );
 }

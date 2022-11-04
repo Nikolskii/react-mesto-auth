@@ -95,7 +95,7 @@ function App() {
     closeAllPopups();
 
     {
-      isRegistrationSuccess && navigate('/sign-in');
+      isRegistrationSuccess && navigate('sign-in');
     }
 
     setIsRegistrationSuccess(null);
@@ -225,6 +225,8 @@ function App() {
 
   function handleSignout() {
     localStorage.removeItem('token');
+    setLoggedIn(false);
+    navigate('sign-in');
   }
 
   return (
@@ -234,11 +236,11 @@ function App() {
 
         <Routes>
           <Route
-            path="/sign-up"
+            path="sign-up"
             element={<Register onRegister={handleRegister} />}
           />
 
-          <Route path="/sign-in" element={<Login onLogin={handleLogin} />} />
+          <Route path="sign-in" element={<Login onLogin={handleLogin} />} />
 
           <Route
             path="/"
@@ -253,11 +255,14 @@ function App() {
                   onCardClick={handleCardClick}
                   onCardLike={handleCardLike}
                 />
+
+                <Footer />
               </ProtectedRoute>
             }
           ></Route>
+
+          <Route path="*" element={<ProtectedRoute loggedIn={loggedIn} />} />
         </Routes>
-        <Footer />
 
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}

@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import AuthForm from './AuthForm';
 
 function Register({ onRegister }) {
   const [email, setEmail] = useState('');
@@ -16,10 +15,11 @@ function Register({ onRegister }) {
     <section className="auth">
       <h1 className="auth__title">Регистрация</h1>
 
-      <AuthForm
-        buttonText="Зарегистрироваться"
+      <form
+        className="auth-form"
         onSubmit={handleSubmit}
         name="register"
+        noValidate
       >
         <fieldset className="auth-form__fieldset">
           <input
@@ -48,7 +48,15 @@ function Register({ onRegister }) {
             required
           />
         </fieldset>
-      </AuthForm>
+
+        <button
+          className="auth-form__button"
+          type="submit"
+          value={'Зарегистрироваться'}
+        >
+          Зарегистрироваться
+        </button>
+      </form>
 
       <p className="auth__text">
         Уже зарегистрированы?&nbsp;
