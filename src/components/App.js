@@ -214,7 +214,7 @@ function App() {
       const token = localStorage.getItem('token');
 
       auth.checkToken(token).then((data) => {
-        setEmail(data.email);
+        setEmail(data.data.email);
       });
 
       setLoggedIn(true);
@@ -230,7 +230,7 @@ function App() {
   return (
     <div className="page">
       <CurrentUserContext.Provider value={currentUser}>
-        <Header onSignout={handleSignout} />
+        <Header loggedIn={loggedIn} onSignout={handleSignout} email={email} />
 
         <Routes>
           <Route
