@@ -21,7 +21,7 @@ export const register = ({ email, password }) => {
   });
 };
 
-export const authorize = ({ email, password }) => {
+export const login = ({ email, password }) => {
   return fetch(`${BASE_URL}/signin`, {
     method: 'POST',
     headers: {
@@ -45,7 +45,7 @@ export const authorize = ({ email, password }) => {
     });
 };
 
-export const getContent = (token) => {
+export const checkToken = (token) => {
   return fetch(`${BASE_URL}/users/me`, {
     method: 'GET',
     headers: {

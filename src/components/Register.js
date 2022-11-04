@@ -52,7 +52,7 @@ function Register({ onRegister }) {
 
       <p className="auth__text">
         Уже зарегистрированы?&nbsp;
-        <NavLink className="auth__link" to="sign-in">
+        <NavLink className="auth__link" to="/sign-in">
           Войти
         </NavLink>
       </p>

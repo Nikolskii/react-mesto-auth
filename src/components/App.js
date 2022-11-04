@@ -194,7 +194,7 @@ function App() {
   // Обработчик формы авторизации
   function handleLogin({ email, password }) {
     auth
-      .authorize({ email, password })
+      .login({ email, password })
       .then((data) => {
         setEmail(email);
         setLoggedIn(true);
@@ -213,14 +213,25 @@ function App() {
     if (localStorage.getItem('token')) {
       const token = localStorage.getItem('token');
 
-      auth.getContent(token).then((res) => console.log(res));
+      auth.checkToken(token).then((data) => {
+        setEmail(data.email);
+      });
+
+      setLoggedIn(true);
+
+      navigate('/');
     }
+  }
+
+  function handleSignout() {
+    localStorage.removeItem('token');
   }
 
   return (
     <div className="page">
       <CurrentUserContext.Provider value={currentUser}>
-        <Header />
+        <Header onSignout={handleSignout} />
+
         <Routes>
           <Route
             path="/sign-up"

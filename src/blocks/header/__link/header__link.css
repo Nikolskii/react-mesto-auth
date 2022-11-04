@@ -1,13 +1,19 @@
 .header__link {
+  background-color: transparent;
   color: #fff;
+  margin: 0;
+  padding: 0;
+  border: none;
   font-family: 'Inter', Arial, sans-serif;
   font-weight: 400;
   font-size: 18px;
   line-height: 22px;
   text-decoration: none;
+
   transition: opacity 0.5s;
 }
 
 .header__link:hover {
   opacity: 0.6;
+  cursor: pointer;
 }
