@@ -82,6 +82,7 @@ function App() {
     setSelectedCard(data);
   }
 
+  // Закрытие попапов
   function closeAllPopups() {
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
@@ -177,12 +178,7 @@ function App() {
     auth
       .register({ email, password })
       .then((res) => {
-        if (res) {
-          console.log('пока все ок');
-          setIsRegistrationSuccess(true);
-        } else {
-          console.log('Что-то пошло не так!');
-        }
+        setIsRegistrationSuccess(true);
       })
       .catch((err) => {
         console.log(err);
@@ -196,9 +192,12 @@ function App() {
     auth
       .login({ email, password })
       .then((data) => {
-        setEmail(email);
-        setLoggedIn(true);
-        navigate('/');
+        if (data.token) {
+          localStorage.setItem('token', data.token);
+          setEmail(email);
+          setLoggedIn(true);
+          navigate('/');
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -209,11 +208,13 @@ function App() {
     tokenCheck();
   }, []);
 
+  // Првоерка токена
   function tokenCheck() {
     if (localStorage.getItem('token')) {
       const token = localStorage.getItem('token');
 
       auth.checkToken(token).then((data) => {
+        console.log(data);
         setEmail(data.data.email);
       });
 
@@ -223,6 +224,7 @@ function App() {
     }
   }
 
+  // Обработчик выхода
   function handleSignout() {
     localStorage.removeItem('token');
     setLoggedIn(false);
