@@ -1,5 +1,9 @@
-.header__link {
-  color: #fff;
+.header__button {
+  background-color: transparent;
+  color: #a9a9a9;
+  margin: 0;
+  padding: 0;
+  border: none;
   font-family: 'Inter', Arial, sans-serif;
   font-weight: 400;
   font-size: 18px;
@@ -8,6 +12,7 @@
   transition: opacity 0.5s;
 }
 
-.header__link:hover {
+.header__button:hover {
   opacity: 0.6;
+  cursor: pointer;
 }

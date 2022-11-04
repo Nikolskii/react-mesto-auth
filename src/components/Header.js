@@ -5,7 +5,7 @@ function Header({ onSignout }) {
     <header className="header">
       <img className="header__logo" src={logo} alt="Логотип проекта Место" />
 
-      <button onClick={onSignout} className="header__link">
+      <button onClick={onSignout} className="header__button">
         Выйти
       </button>
     </header>
