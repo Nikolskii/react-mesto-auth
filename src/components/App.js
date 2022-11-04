@@ -24,6 +24,7 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [isRegistrationSuccess, setIsRegistrationSuccess] = useState(null);
   const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
 
@@ -98,9 +99,11 @@ function App() {
     if (isRegistrationSuccess) {
       navigate('sign-in');
     }
-
-    setIsRegistrationSuccess(null);
   }
+
+  useEffect(() => {
+    setIsRegistrationSuccess(null);
+  }, []);
 
   // Обработчик submit формы редактирования профиля
   function handleUpdateUser(userData) {
@@ -175,6 +178,10 @@ function App() {
 
   // Обработчий формы регистрации
   function handleRegister({ email, password }) {
+    setLoading(true);
+
+    setIsInfoTooltipPopupOpen(true);
+
     auth
       .register({ email, password })
       .then((res) => {
@@ -184,7 +191,10 @@ function App() {
         console.log(err);
         setIsRegistrationSuccess(false);
       })
-      .finally(() => setIsInfoTooltipPopupOpen(true));
+      .finally(() => {
+        // setIsInfoTooltipPopupOpen(true);
+        setLoading(false);
+      });
   }
 
   // Обработчик формы авторизации
@@ -204,7 +214,7 @@ function App() {
       });
   }
 
-  // Првоерка токена
+  // Проверка токена
   function tokenCheck() {
     if (localStorage.getItem('token')) {
       const token = localStorage.getItem('token');
@@ -296,6 +306,7 @@ function App() {
           isOpen={isInfoTooltipPopupOpen}
           isRegistrationSuccess={isRegistrationSuccess}
           onClose={closeInfoTooltipPopup}
+          loading={loading}
         />
       </CurrentUserContext.Provider>
     </div>
