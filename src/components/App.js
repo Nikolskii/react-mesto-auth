@@ -37,29 +37,28 @@ function App() {
   const [isInfoTooltipPopupOpen, setIsInfoTooltipPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
 
-  // // Получение данных пользователя
-  // useEffect(() => {
-  //   api
-  //     .getUserInfo()
-  //     .then((userData) => {
-  //       setCurrentUser(userData);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // }, []);
+  // Получение карточек и данных пользователя
+  useEffect(() => {
+    if (loggedIn) {
+      api
+        .getUserInfo()
+        .then((userData) => {
+          setCurrentUser(userData);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
 
-  // // Получение данных карточек
-  // useEffect(() => {
-  //   api
-  //     .getInitialCards()
-  //     .then((cards) => {
-  //       setCards(cards);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // }, []);
+      api
+        .getInitialCards()
+        .then((cards) => {
+          setCards(cards);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [loggedIn]);
 
   // Проверка токена
   useEffect(() => {
@@ -240,24 +239,6 @@ function App() {
         setLoggedIn(true);
 
         navigate('/');
-
-        api
-          .getUserInfo()
-          .then((userData) => {
-            setCurrentUser(userData);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-
-        api
-          .getInitialCards()
-          .then((cards) => {
-            setCards(cards);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
       });
     }
   }
