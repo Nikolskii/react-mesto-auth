@@ -6,6 +6,7 @@ function PopupWithForm({
   isOpen,
   onClose,
   onSubmit,
+  handleSubmitForm,
 }) {
   return (
     <section
@@ -17,7 +18,7 @@ function PopupWithForm({
 
         <form
           className={`form form_purpose_${name}`}
-          onSubmit={onSubmit}
+          onSubmit={handleSubmitForm(onSubmit)}
           name={name}
         >
           {children}

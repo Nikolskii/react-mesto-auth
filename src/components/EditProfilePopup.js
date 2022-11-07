@@ -1,9 +1,16 @@
 import React from 'react';
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import PopupWithForm from './PopupWithForm';
 import { CurrentUserContext } from '../../src/contexts/CurrentUserContext';
 
 function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
+  const {
+    register,
+    formState: { errors },
+    handleSubmitForm,
+  } = useForm();
+
   const currentUser = React.useContext(CurrentUserContext);
 
   const [buttonText, setButtonText] = useState('');
@@ -33,6 +40,7 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
 
   return (
     <PopupWithForm
+      handleSubmitForm={handleSubmitForm}
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
