@@ -1,15 +1,16 @@
 import React from 'react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import PopupWithForm from './PopupWithForm';
 import { CurrentUserContext } from '../../src/contexts/CurrentUserContext';
 
 function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
   const {
     register,
-    formState: { errors },
+    formState: { errors, isValid },
     handleSubmit,
-  } = useForm();
+  } = useForm({
+    mode: 'onBlur',
+  });
 
   const currentUser = React.useContext(CurrentUserContext);
 
@@ -29,7 +30,6 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
 
   function onSubmit(data) {
     setButtonText('Сохранение...');
-    console.log(JSON.stringify(data));
 
     onUpdateUser({
       name,
@@ -53,8 +53,16 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
         >
           <fieldset className="form__fieldset">
             <input
-              {...register('Имя пользователя', {
-                required: true,
+              {...register('name', {
+                required: 'Поле обязательно к заполнению',
+                minLength: {
+                  value: 2,
+                  message: 'Минимум 2 символа',
+                },
+                maxLength: {
+                  value: 40,
+                  message: 'Максимум 40 символов',
+                },
               })}
               className="form__input form__input_type_name"
               value={name || ''}
@@ -65,16 +73,29 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
               type="text"
               // name="form__input_type_name"
               // id="form__input_type_name"
-              // minLength="2"
-              // maxLength="40"
-              // required
             />
-            <span
-              className="form__input-error"
-              id="form__input_type_name-error"
-            ></span>
+
+            {errors?.name && (
+              <span
+                className="form__input-error_active"
+                id="form__input_type_name-error"
+              >
+                {errors?.name?.message}
+              </span>
+            )}
 
             <input
+              {...register('description', {
+                required: 'Поле обязательно к заполнению',
+                minLength: {
+                  value: 2,
+                  message: 'Минимум 2 символа',
+                },
+                maxLength: {
+                  value: 200,
+                  message: 'Максимум 200 символов',
+                },
+              })}
               className="form__input form__input_type_job"
               value={description || ''}
               onChange={(evt) => {
@@ -82,18 +103,25 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
               }}
               placeholder="Краткое описание"
               type="text"
-              name="form__input_type_job"
-              id="form__input_type_job"
-              minLength="2"
-              maxLength="200"
-              required
+              // name="form__input_type_job"
+              // id="form__input_type_job"
             />
-            <span
-              className="form__input-error"
-              id="form__input_type_job-error"
-            ></span>
+
+            {errors?.description && (
+              <span
+                className="form__input-error_active"
+                id="form__input_type_name-error"
+              >
+                {errors?.description?.message}
+              </span>
+            )}
           </fieldset>
-          <button className="form__button" type="submit" value={buttonText}>
+          <button
+            className="form__button"
+            type="submit"
+            value={buttonText}
+            disabled={!isValid}
+          >
             {buttonText}
           </button>
         </form>
