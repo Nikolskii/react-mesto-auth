@@ -49,10 +49,13 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
           className="form form_purpose_edit-profile"
           onSubmit={handleSubmit(onSubmit)}
           name={name}
+          noValidate
         >
           <fieldset className="form__fieldset">
             <input
-              {...register('Имя пользователя')}
+              {...register('Имя пользователя', {
+                required: true,
+              })}
               className="form__input form__input_type_name"
               value={name || ''}
               onChange={(evt) => {
@@ -60,11 +63,11 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
               }}
               placeholder="Имя пользователя"
               type="text"
-              name="form__input_type_name"
-              id="form__input_type_name"
-              minLength="2"
-              maxLength="40"
-              required
+              // name="form__input_type_name"
+              // id="form__input_type_name"
+              // minLength="2"
+              // maxLength="40"
+              // required
             />
             <span
               className="form__input-error"
