@@ -65,6 +65,9 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
                 },
               })}
               className="form__input form__input_type_name"
+              // className={`form__input form__input_type_name ${
+              //   !isValid && 'form__input_type_error'
+              // }`}
               value={name || ''}
               onChange={(evt) => {
                 setName(evt.target.value);
@@ -76,11 +79,13 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
             />
 
             {errors?.name && (
-              <span
-                className="form__input-error_active"
-                id="form__input_type_name-error"
-              >
-                {errors?.name?.message}
+              <span>
+                <p
+                  className="form__input-error_active"
+                  id="form__input_type_name-error"
+                >
+                  {errors?.name?.message}
+                </p>
               </span>
             )}
 
@@ -108,11 +113,13 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
             />
 
             {errors?.description && (
-              <span
-                className="form__input-error_active"
-                id="form__input_type_name-error"
-              >
-                {errors?.description?.message}
+              <span>
+                <p
+                  className="form__input-error_active"
+                  id="form__input_type_name-error"
+                >
+                  {errors?.description?.message}
+                </p>
               </span>
             )}
           </fieldset>
