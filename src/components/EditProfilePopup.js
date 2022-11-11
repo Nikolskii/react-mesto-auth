@@ -4,13 +4,9 @@ import { useForm } from 'react-hook-form';
 import { CurrentUserContext } from '../../src/contexts/CurrentUserContext';
 
 function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
-  const {
-    register,
-    formState: { errors, isValid },
-    handleSubmit,
-  } = useForm({
-    mode: 'onBlur',
-  });
+  const [name, setName] = useState('');
+
+  const [description, setDescription] = useState('');
 
   const currentUser = React.useContext(CurrentUserContext);
 
@@ -24,9 +20,13 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
     setButtonText('Сохранить');
   }, [currentUser]);
 
-  const [name, setName] = useState('');
-
-  const [description, setDescription] = useState('');
+  const {
+    register,
+    formState: { errors, isValid },
+    handleSubmit,
+  } = useForm({
+    mode: 'onBlur',
+  });
 
   function onSubmit(data) {
     setButtonText('Сохранение...');
