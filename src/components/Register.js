@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import TextImport from './TextInput';
 
 function Register({ onRegister }) {
   const [email, setEmail] = useState('');
@@ -24,45 +25,27 @@ function Register({ onRegister }) {
         }}
         validationSchema={Yup.object({
           email: Yup.string()
-            .email('Invalid email address')
-            .required('Required'),
+            .email('Неверно указан адрес электронной почты')
+            .required('Поле обязательно к заполнению'),
           password: Yup.string()
-            .min(4, 'Must be 4 characters or more')
-            .required('Required'),
+            .min(6, 'Пароль должен содержать не менее 6 символов')
+            .required('Поле обязательно к заполнению'),
         })}
         onSubmit={(values, { setSubmitting }) => {
           setTimeout(() => {
             alert(JSON.stringify(values, null, 2));
+            console.log(JSON.stringify(values));
             setSubmitting(false);
           }, 400);
         }}
       >
         <Form className="auth-form">
           <fieldset className="auth-form__fieldset">
-            <Field
-              name="email"
-              type="text"
-              placeholder="Email"
-              className="auth-form__input"
-            />
-            <span style={{ color: 'red' }}>
-              <ErrorMessage name="email" />
-            </span>
-
-            <Field
-              name="password"
-              type="text"
-              placeholder="password"
-              className="auth-form__input"
-            />
-            <ErrorMessage name="password" />
+            <TextImport name="email" type="text" placeholder="Email" />
+            <TextImport name="password" type="password" placeholder="Пароль" />
           </fieldset>
 
-          <button
-            className="auth-form__button"
-            type="submit"
-            // value={'Зарегистрироваться'}
-          >
+          <button className="auth-form__button" type="submit">
             Зарегистрироваться
           </button>
         </Form>
