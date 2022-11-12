@@ -1,56 +1,46 @@
 import { useState } from 'react';
+import { Formik, Form } from 'formik';
+import * as Yup from 'yup';
+import TextImport from './TextInput';
 
 function Login({ onLogin }) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  function handleSubmit(evt) {
-    evt.preventDefault();
-
-    onLogin({ email, password });
-  }
+  // const [email, setEmail] = useState('');
+  // const [password, setPassword] = useState('');
 
   return (
     <section className="auth">
       <h1 className="auth__title">Вход</h1>
 
-      <form className="auth-form" onSubmit={handleSubmit} name="login">
-        <fieldset className="auth-form__fieldset">
-          <input
-            onChange={(evt) => {
-              setEmail(evt.target.value);
-            }}
-            value={email}
-            className="auth-form__input"
-            type="text"
-            name="email"
-            id="email"
-            placeholder="Email"
-            minLength="5"
-            maxLength="30"
-            required
-          />
+      <Formik
+        initialValues={{
+          email: '',
+          password: '',
+        }}
+        validationSchema={Yup.object({
+          email: Yup.string()
+            .email('Неверно указан адрес электронной почты')
+            .required('Поле обязательно к заполнению'),
+          password: Yup.string()
+            .min(6, 'Пароль должен содержать не менее 6 символов')
+            .required('Поле обязательно к заполнению'),
+        })}
+        onSubmit={(values, { setSubmitting }) => {
+          onLogin({ email: values.email, password: values.password });
 
-          <input
-            onChange={(evt) => {
-              setPassword(evt.target.value);
-            }}
-            value={password}
-            className="auth-form__input"
-            type="password"
-            name="password"
-            id="password"
-            placeholder="Пароль"
-            minLength="4"
-            maxLength="30"
-            required
-          />
-        </fieldset>
+          setSubmitting(false);
+        }}
+      >
+        <Form className="auth-form">
+          <fieldset className="auth-form__fieldset">
+            <TextImport name="email" type="text" placeholder="Email" />
+            <TextImport name="password" type="password" placeholder="Пароль" />
+          </fieldset>
 
-        <button className="auth-form__button" type="submit" value="Войти">
-          Войти
-        </button>
-      </form>
+          <button className="auth-form__button" type="submit">
+            Войти
+          </button>
+        </Form>
+      </Formik>
     </section>
   );
 }
