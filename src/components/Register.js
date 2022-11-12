@@ -1,18 +1,12 @@
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { Formik, Field, Form, ErrorMessage } from 'formik';
+import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import TextImport from './TextInput';
 
 function Register({ onRegister }) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  // function handleSubmit(evt) {
-  //   evt.preventDefault();
-
-  //   onRegister({ email, password });
-  // }
+  // const [email, setEmail] = useState('');
+  // const [password, setPassword] = useState('');
 
   return (
     <section className="auth">
@@ -32,11 +26,9 @@ function Register({ onRegister }) {
             .required('Поле обязательно к заполнению'),
         })}
         onSubmit={(values, { setSubmitting }) => {
-          setTimeout(() => {
-            alert(JSON.stringify(values, null, 2));
-            console.log(JSON.stringify(values));
-            setSubmitting(false);
-          }, 400);
+          onRegister({ email: values.email, password: values.password });
+
+          setSubmitting(false);
         }}
       >
         <Form className="auth-form">
@@ -45,12 +37,15 @@ function Register({ onRegister }) {
             <TextImport name="password" type="password" placeholder="Пароль" />
           </fieldset>
 
-          <button className="auth-form__button" type="submit">
+          <button
+            className="auth-form__button"
+            type="submit"
+            // disabled={!Formik.isValid}
+          >
             Зарегистрироваться
           </button>
         </Form>
       </Formik>
-
       <p className="auth__text">
         Уже зарегистрированы?&nbsp;
         <NavLink className="auth__link" to="/sign-in">
