@@ -37,11 +37,7 @@ function Register({ onRegister }) {
             <TextImport name="password" type="password" placeholder="Пароль" />
           </fieldset>
 
-          <button
-            className="auth-form__button"
-            type="submit"
-            // disabled={!Formik.isValid}
-          >
+          <button className="auth-form__button" type="submit">
             Зарегистрироваться
           </button>
         </Form>
