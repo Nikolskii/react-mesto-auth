@@ -190,26 +190,30 @@ function App() {
   }
 
   // Обработчий формы регистрации
-  function handleRegister({ email, password }) {
-    setLoading(true);
+  const cbRegister = useCallback(async ({ email, password }) => {
+    try {
+      setLoading(true);
 
-    setIsInfoTooltipPopupOpen(true);
+      setIsInfoTooltipPopupOpen(true);
 
-    auth
-      .register({ email, password })
-      .then((res) => {
+      const data = await auth.register({ email, password });
+
+      if (!data) {
+        throw new Error('Failed to register');
+      }
+
+      if (data) {
         setIsResponseSuccess(true);
         setInfoTooltipText('Вы успешно зарегистрировались!');
-      })
-      .catch((err) => {
-        console.log(err);
-        setIsResponseSuccess(false);
-        setInfoTooltipText('Что-то пошло не так! Попробуйте ещё раз.');
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }
+      }
+    } catch (err) {
+      console.log(err);
+      setIsResponseSuccess(false);
+      setInfoTooltipText('Что-то пошло не так! Попробуйте ещё раз.');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   // Обработчик формы аутентификации
   const cbAuthenticate = useCallback(async ({ email, password }) => {
@@ -286,7 +290,7 @@ function App() {
         <Routes>
           <Route
             path="sign-up"
-            element={<Register onRegister={handleRegister} />}
+            element={<Register onRegister={cbRegister} />}
           />
 
           <Route path="sign-in" element={<Login onLogin={cbAuthenticate} />} />
