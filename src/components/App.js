@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import { api } from '../utils/api';
@@ -18,6 +18,7 @@ import * as auth from '../utils/auth';
 import '../index.css';
 
 function App() {
+  const [initialLoading, setInitialLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState('');
   const [cards, setCards] = useState([]);
   const [deletedCard, setDeletedCard] = useState(null);
@@ -62,7 +63,7 @@ function App() {
 
   // Проверка токена
   useEffect(() => {
-    tokenCheck();
+    cbTokenCheck();
   }, []);
 
   useEffect(() => {
@@ -181,6 +182,13 @@ function App() {
       });
   }
 
+  // Обработчик выхода
+  function handleSignout() {
+    localStorage.removeItem('token');
+    setLoggedIn(false);
+    navigate('sign-in');
+  }
+
   // Обработчий формы регистрации
   function handleRegister({ email, password }) {
     setLoading(true);
@@ -204,50 +212,70 @@ function App() {
   }
 
   // Обработчик формы аутентификации
-  function handleLogin({ email, password }) {
-    setLoading(true);
+  const cbAuthenticate = useCallback(async ({ email, password }) => {
+    try {
+      setLoading(true);
+      const data = await auth.login({ email, password });
 
-    auth
-      .login({ email, password })
-      .then((data) => {
-        if (data.token) {
-          localStorage.setItem('token', data.token);
-          setEmail(email);
-          setLoggedIn(true);
-          navigate('/');
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-        setIsInfoTooltipPopupOpen(true);
-        setIsResponseSuccess(false);
-        setInfoTooltipText('Что-то пошло не так! Попробуйте ещё раз.');
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }
+      if (!data) {
+        throw new Error('Invalid credentials');
+      }
+
+      if (data.token) {
+        localStorage.setItem('token', data.token);
+        setLoggedIn(true);
+        setEmail(email);
+        // Убрать навигейт?
+        navigate('/');
+      }
+    } catch (err) {
+      console.log(err);
+      setIsInfoTooltipPopupOpen(true);
+      setIsResponseSuccess(false);
+      setInfoTooltipText('Что-то пошло не так! Попробуйте ещё раз.');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   // Проверка токена
-  function tokenCheck() {
-    const token = localStorage.getItem('token');
+  const cbTokenCheck = useCallback(async () => {
+    try {
+      setInitialLoading(true);
+      const token = localStorage.getItem('token');
 
-    if (token) {
-      auth.checkToken(token).then((data) => {
-        setEmail(data.data.email);
+      if (!token) {
+        throw new Error('No token in storage');
+      }
 
-        setLoggedIn(true);
+      const user = await auth.checkToken(token);
 
-        navigate('/');
-      });
+      if (!user) {
+        throw new Error('Invalid user');
+      }
+
+      setLoggedIn(true);
+      setEmail(user.data.email);
+
+      // Убрать навигейт ниже?!
+      // navigate('/');
+    } catch {
+    } finally {
+      setInitialLoading(false);
     }
-  }
+  }, []);
 
-  // Обработчик выхода
-  function handleSignout() {
-    localStorage.removeItem('token');
-    setLoggedIn(false);
-    navigate('sign-in');
+  if (initialLoading) {
+    return (
+      <div
+        style={{
+          height: '100vh',
+          backgroundColor: 'black',
+        }}
+      >
+        <h1 className="profile__title">Загрузка...</h1>
+      </div>
+    );
   }
 
   return (
@@ -261,7 +289,7 @@ function App() {
             element={<Register onRegister={handleRegister} />}
           />
 
-          <Route path="sign-in" element={<Login onLogin={handleLogin} />} />
+          <Route path="sign-in" element={<Login onLogin={cbAuthenticate} />} />
 
           <Route
             path="/"
