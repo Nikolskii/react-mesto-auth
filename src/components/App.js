@@ -193,7 +193,6 @@ function App() {
   const cbRegister = useCallback(async ({ email, password }) => {
     try {
       setLoading(true);
-
       setIsInfoTooltipPopupOpen(true);
 
       const data = await auth.register({ email, password });
@@ -202,12 +201,11 @@ function App() {
         throw new Error('Failed to register');
       }
 
-      if (data) {
-        setIsResponseSuccess(true);
-        setInfoTooltipText('Вы успешно зарегистрировались!');
-      }
+      setIsResponseSuccess(true);
+      setInfoTooltipText('Вы успешно зарегистрировались!');
     } catch (err) {
       console.log(err);
+
       setIsResponseSuccess(false);
       setInfoTooltipText('Что-то пошло не так! Попробуйте ещё раз.');
     } finally {
@@ -245,7 +243,6 @@ function App() {
   // Проверка токена
   const cbTokenCheck = useCallback(async () => {
     try {
-      setInitialLoading(true);
       const token = localStorage.getItem('token');
 
       if (!token) {
@@ -260,7 +257,6 @@ function App() {
 
       setLoggedIn(true);
       setEmail(user.data.email);
-
       // Убрать навигейт ниже?!
       // navigate('/');
     } catch {
