@@ -16,6 +16,7 @@ import ProtectedRoute from './ProtectedRoute';
 import InfoTooltip from './InfoTooltip';
 import * as auth from '../utils/auth';
 import '../index.css';
+import Loader from './Loader';
 
 function App() {
   const [initialLoading, setInitialLoading] = useState(true);
@@ -153,6 +154,17 @@ function App() {
       });
   }
 
+  // const cbAddPlaceSubmit = useCallback(async ({ name, link }) => {
+  //   try {
+  //     const newCard = await api.addCard(name, link);
+
+  //     setCards([newCard, ...cards]);
+  //     closeAllPopups();
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // }, []);
+
   // Обработчик лайка карточки
   function handleCardLike(card) {
     const isLiked = card.likes.some((like) => like._id === currentUser._id);
@@ -169,18 +181,28 @@ function App() {
       });
   }
 
+  // const cbCardLike = useCallback(async (card) => {
+  //   try {
+  //     const isLiked = card.likes.some((like) => like._id === currentUser._id);
+
+  //     const newCard = await api.changeLikeCardStatus(card._id, isLiked);
+
+  //     setCards((cards) => cards.map((c) => (c._id === card._id ? newCard : c)));
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // }, []);
+
   // Обработчик удаления карточки
-  function handleCardDelete(card) {
-    api
-      .deleteCard(card._id)
-      .then(() => {
-        setCards((cards) => cards.filter((c) => c._id !== card._id));
-        closeAllPopups();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
+  const cbCardDelete = useCallback(async (card) => {
+    try {
+      await api.deleteCard(card._id);
+      setCards((cards) => cards.filter((c) => c._id !== card._id));
+      closeAllPopups();
+    } catch (err) {
+      console.log(err);
+    }
+  }, []);
 
   // Обработчик выхода
   const cbSignout = useCallback(async () => {
@@ -259,23 +281,15 @@ function App() {
       setEmail(user.data.email);
       // Убрать навигейт ниже?!
       // navigate('/');
-    } catch {
+    } catch (err) {
+      console.log(err);
     } finally {
       setInitialLoading(false);
     }
   }, []);
 
   if (initialLoading) {
-    return (
-      <div
-        style={{
-          height: '100vh',
-          backgroundColor: 'black',
-        }}
-      >
-        <h1 className="profile__title">Загрузка...</h1>
-      </div>
-    );
+    return <Loader />;
   }
 
   return (
@@ -334,7 +348,7 @@ function App() {
         <SubmitDeletePopup
           isOpen={isSubmitDeletePopupOpen}
           onClose={closeAllPopups}
-          onSubmitDelete={handleCardDelete}
+          onSubmitDelete={cbCardDelete}
           card={deletedCard}
         />
 
