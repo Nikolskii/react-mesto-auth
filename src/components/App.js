@@ -183,11 +183,11 @@ function App() {
   }
 
   // Обработчик выхода
-  function handleSignout() {
+  const cbSignout = useCallback(async () => {
     localStorage.removeItem('token');
     setLoggedIn(false);
     navigate('sign-in');
-  }
+  }, []);
 
   // Обработчий формы регистрации
   const cbRegister = useCallback(async ({ email, password }) => {
@@ -281,7 +281,7 @@ function App() {
   return (
     <div className="page">
       <CurrentUserContext.Provider value={currentUser}>
-        <Header loggedIn={loggedIn} onSignout={handleSignout} email={email} />
+        <Header loggedIn={loggedIn} onSignout={cbSignout} email={email} />
 
         <Routes>
           <Route
