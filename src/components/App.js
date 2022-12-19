@@ -160,7 +160,7 @@ function App() {
       .changeLikeCardStatus(card._id, isLiked)
       .then((newCard) => {
         setCards((cards) =>
-          cards.map((c) => (c._id === card._id ? newCard : c))
+          cards.map((c) => (c._id === card._id ? newCard : c)),
         );
       })
       .catch((err) => {
@@ -211,6 +211,8 @@ function App() {
       .login({ email, password })
       .then((data) => {
         if (data.token) {
+          console.log(data);
+          console.log(data.token);
           localStorage.setItem('token', data.token);
           setEmail(email);
           setLoggedIn(true);
